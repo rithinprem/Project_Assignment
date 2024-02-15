@@ -1,0 +1,5 @@
+Flask
+json
+bs4
+requests
+gunicorn
