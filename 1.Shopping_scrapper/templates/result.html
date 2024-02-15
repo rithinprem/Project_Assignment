@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Product Search</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('https://rb.gy/gubb05') center center fixed;
+            background-size: cover;
+            backdrop-filter: brightness(0.5);
+            margin: 20px;
+        }
+        
+        h1, h2 {
+            color: #eae7e0;
+            text-align: center;
+        }
+        
+        form {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        
+        input {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        button {
+            padding: 12px;
+            font-size: 16px;
+            background-color: #ff9900;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #e68a00;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            background-color: #e7e4e4;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #ff9900;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        /* Links */
+        a {
+            color: #0066c0;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        a:hover {
+            color: #004080;
+        }
+        
+        /* Images */
+        img {
+            max-width: 100px;
+            max-height: 80px;
+            border-radius: 5px;
+        }
+        
+        /* Media Query for Mobile Phones */
+@media only screen and (max-width: 600px) {
+    h1, h2 {
+        text-align: center;
+    }
+
+    form {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    label {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    input {
+        padding: 10px;
+        font-size: 14px;
+        width: 100%; /* Make the input full width */
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 14px;
+        width: 100%; /* Make the button full width */
+        box-sizing: border-box;
+    }
+
+    table {
+        font-size: 12px;
+        margin-top: 10px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    img {
+        max-width: 60px;
+        max-height: 48px;
+        border-radius: 0; /* Adjust border-radius as needed */
+    }
+
+    div {
+        flex-direction: column;
+    }
+}
+
+        
+    </style>
+</head>
+<body>
+    <h1>Online Product Search</h1>
+
+    <form action="{{ url_for('amazon_search') }}" method="get">
+        <label for="search">Search:</label>
+        <input type="text" id="search" name="search" placeholder="Enter search term">
+        <button type="submit">Search</button>
+    </form>
+
+    <div style="display: flex; justify-content: space-between;">
+        <!-- Display results for the first site (e.g., Amazon) -->
+        <div>
+            {% if amazon_data %}
+            {% if amazon_data.status == 'success' %}
+                <h2>Amazon Results:</h2>
+                <table>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Link</th>
+                        <th>Image</th>
+                    </tr>
+                    {% for product in amazon_data.data %}
+                        <tr>
+                            <td>{{ product.Product_Description|default("N/A") }}</td>
+                            <td>{{ product.Product_Price }}</td>
+                            <td><a href="{{ product.Product_link }}" target="_blank">View on Amazon</a></td>
+                            <td><img src="{{ product.Product_Image }}" alt="{{ product.Product_Name }}"></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p> </p>
+            {% endif %}
+            {% endif %}
+        </div>
+
+        <!-- Display results for the second site -->
+        <div>
+            {% if greateasternretail_data %}
+            {% if greateasternretail_data.status == 'success' %}
+                <h2>Great Eastern Retail Results:</h2>
+                <table>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Link</th>
+                        <th>Image</th>
+                    </tr>
+                    {% for product in greateasternretail_data.data %}
+                        <tr>
+                            <td>{{ product.Product_Description|default("N/A") }}</td>
+                            <td>{{ product.Product_Price }}</td>
+                            <td><a href="{{ product.Product_link }}" target="_blank">View on Great Eastern Retail</a></td>
+                            <td><img src="{{ product.Product_Image }}" alt="{{ product.Product_Name }}"></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p> </p>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
