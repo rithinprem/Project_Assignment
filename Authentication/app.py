@@ -16,6 +16,11 @@ from flask_login import (
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 
+# Flask app setup
+
+app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
+
 # Internal imports
 from db import init_db_command
 from user import User
@@ -29,10 +34,6 @@ GOOGLE_DISCOVERY_URL = (
 )
 
 
-# Flask app setup
-
-app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
 
 # User session management setup
 # https://flask-login.readthedocs.io/en/latest
